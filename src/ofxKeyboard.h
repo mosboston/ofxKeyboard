@@ -32,10 +32,10 @@
 #ifndef _ofxKEYBOARD
 #define _ofxKEYBOARD
 
-#define USE_TUIO
+//#define USE_TUIO
 
 #ifdef USE_TUIO
-#define tuioCursorSpeedMult				0.5	// the iphone screen is so small, easy to rack up huge velocities! need to scale down 
+#define tuioCursorSpeedMult				0.5	// the iphone screen is so small, easy to rack up huge velocities! need to scale down
 #define tuioStationaryForce				0.001f	// force exerted when cursor is stationary
 #include "ofxTuio.h"
 #endif
@@ -50,66 +50,69 @@ struct tCursor {
 	ofPoint loc;
 };
 
-class ofxKeyboard{	
+class ofxKeyboard{
 public:
-	
+
 	ofxKeyboard();
-	
+
 	// Initial setup. It must be set before updating or drawing;
 	void loadmap(const string& filePath);
 	void loadfont(const string& fontPath){font.loadFont(fontPath,15,true,true,true);};
     void savemap(const string& filePath);
-	
-	// Acctions
+
+	// Actions
 	void rotate(float _angle){ angle += _angle;};
 	void resize(float _resize);
 	void draw();
-	
+
 	// Edit keyboard actions
-	void addKey(string _letter, int _x, int _y, int _width, int _height);				// Pass the cartesian x and y cordinates of the screen
-	void moveKeyTo(int _indexKey, int _x, int _y ){ keys[_indexKey].moveTo(_x,_y); };	// Pass the cartesian x and y cordinates of the screen
+	void addKey(string _letter, int _x, int _y, int _width, int _height);				// Pass the Cartesian x and y coordinates of the screen
+	void moveKeyTo(int _indexKey, int _x, int _y ){ keys[_indexKey].moveTo(_x,_y); };	// Pass the Cartesian x and y coordinates of the screen
 	void moveCurrentKeyTo(int _x, int _y ){ keys[cKey].moveTo(_x,_y); };
-	
+
 	// Checks things
 	bool isOver(ofPoint _loc);
 	bool isOver(int _x, int _y){isOver(ofPoint(_x,_y));};
-	
+
 	bool isOnBorder(ofPoint _loc);
 	bool isOnBorder(int _x, int _y){isOnBorder(ofPoint(_x,_y));};
-	
+
 	bool checkKeys(ofPoint _loc);
 	bool checkKeys(int _x, int _y){checkKeys(ofPoint(_x,_y));};
-	
+
 #ifdef USE_TUIO
 	ofxTuioClient * tuioClient;
 	void	setTuioClient (ofxTuioClient * _tuioClient);
-	
+
 	// TUIO Events Handlers
 	void	tuioAdded(ofxTuioCursor & tuioCursor);
 	void	tuioRemoved(ofxTuioCursor & tuioCursor);
 	void	tuioUpdated(ofxTuioCursor & tuioCursor);
-    
+
     vector<tCursor>	cursorsOnBorder;
 	ofPoint        oldLoc[3];
 #endif
-    
+
     int		nKeys;								// Number of loaded keys
 	ofxKey	keys[200];							// Array of keys
 	int		cKey;								// Position on the array of the selected key
-	
+
 	ofPoint	position;							// Cartesian coordinates of the center of the keyboard
 	float	angle;								// The keyboard could be rotated. Because is constructed using polar geometry it won´t lose funtionality
-	
+
 	float	width,height;						// Width and Height of the keyboard
 	ofColor	foregroundColor,backgroundColor;	// Hexcode of the fore and background
-	
+
 	ofTrueTypeFont  font;
-	
+
 	ofEvent<string> keyPressed;					// Key Event
-    
+
 	ofEvent<float>      scaling;
 	ofEvent<float>      rotation;
 	ofEvent<ofPoint>	moving;
+
+	void _mouseReleased(ofMouseEventArgs &e);
+	void _mouseMoved(ofMouseEventArgs &e);
 };
 
 #endif
