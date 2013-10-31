@@ -43,9 +43,9 @@ ofxKeyboard::ofxKeyboard(){
 	width = 0;
 	height = 0;
 
-	//ofRegisterMouseEvents(this);
-    ofAddListener(ofEvents().mouseReleased, this, &ofxKeyboard::_mouseReleased);
-    ofAddListener(ofEvents().mouseMoved, this, &ofxKeyboard::_mouseMoved);
+	ofRegisterMouseEvents(this);
+//    ofAddListener(ofEvents().mouseReleased, this, &ofxKeyboard::_mouseReleased);
+//    ofAddListener(ofEvents().mouseMoved, this, &ofxKeyboard::_mouseMoved);
 }
 
 void ofxKeyboard::loadmap(const string& path){
@@ -177,20 +177,32 @@ bool ofxKeyboard::checkKeys(ofPoint _loc){
 	return pressed;
 }
 
-void ofxKeyboard::_mouseReleased(ofMouseEventArgs &e) {
-    ofPoint loc = ofPoint(e.x, e.y);
-    if (isOver(loc))					// IF the cursor is over the keyboard
-		if (checkKeys(loc)){			// ... and is pressing a key
-		    cout << "key being pressed, event sent by checkKeys" << endl;
-		}
-}
-
-void ofxKeyboard::_mouseMoved(ofMouseEventArgs &e) {
+//--------------------------------------------------------------
+void ofxKeyboard::mouseMoved(ofMouseEventArgs& e) {
     ofPoint loc = ofPoint(e.x, e.y);
     bool hovering = isOver(loc);					// IF the cursor is over the keyboard
 //		if (checkKeys(loc)){			// ... and is not pressing a key
 //		    cout << "key being pressed, event sent by checkKeys" << endl;
 //		}
+}
+
+//--------------------------------------------------------------
+void ofxKeyboard::mouseDragged(ofMouseEventArgs& e) {
+
+}
+
+//--------------------------------------------------------------
+void ofxKeyboard::mousePressed(ofMouseEventArgs& e) {
+
+}
+
+//--------------------------------------------------------------
+void ofxKeyboard::mouseReleased(ofMouseEventArgs& e) {
+    ofPoint loc = ofPoint(e.x,e.y);
+    if (isOver(loc))					// IF the cursor is over the keyboard
+		if (checkKeys(loc)){			// ... and is pressing a key
+		    //cout << "key being pressed, event sent by checkKeys" << endl;
+		}
 }
 
 #ifdef USE_TUIO

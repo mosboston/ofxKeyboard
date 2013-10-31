@@ -111,8 +111,10 @@ public:
 	ofEvent<float>      rotation;
 	ofEvent<ofPoint>	moving;
 
-	void _mouseReleased(ofMouseEventArgs &e);
-	void _mouseMoved(ofMouseEventArgs &e);
+	void mouseMoved( ofMouseEventArgs& e );
+    void mouseDragged( ofMouseEventArgs& e );
+    void mousePressed( ofMouseEventArgs& e );
+    void mouseReleased( ofMouseEventArgs& e );
 };
 
 #endif
