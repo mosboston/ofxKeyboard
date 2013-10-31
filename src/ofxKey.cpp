@@ -100,7 +100,8 @@ void ofxKey::draw(){
 		ofScale(width * scaleW,height * scaleH, 1);
 
 		//cout << "font isLoaded: " << font->isLoaded() << endl;
-		font->drawString(letter, -font->stringWidth(letter)*0.5, font->stringHeight(letter)*0.35);//(height/10)*1.3);
+		//font->drawString(letter, -font->stringWidth(letter)*0.5, font->stringHeight(letter)*0.35);//(height/10)*1.3);
+		font->drawString(letter, -font->stringWidth(letter)*0.5, font->getLineHeight()/3.5);//(height/10)*1.3);
     ofPopMatrix();
 }
 
