@@ -37,8 +37,8 @@ ofxKeyboard::ofxKeyboard(){
 
 	angle = 0;
 
-	position.x = ofGetWidth()/2;
-	position.y = ofGetHeight()/2;
+	position.x = ofGetWindowWidth()/2;
+	position.y = ofGetWindowHeight()/2;
 
 	width = 0;
 	height = 0;
@@ -63,7 +63,12 @@ void ofxKeyboard::loadmap(const string& path){
 		if ( (lineCounter == 0) && (values.size()) == 4) {
 			width = ofToFloat(values[2]);								// The first line of the file have information about the
 			height = ofToFloat(values[3]);								// the width and the height of the keyboard. (The first two values are a relative position of the keyboard center when was draw)
-		} else if ((values.size() == 5)) {
+		} else if ((values.size() >= 5)) {
+		    if (values.size() == 6){
+                values.erase(values.begin());
+                values[0] = ",";
+		    }
+
 			string _letter = values[0];
 			float _radio	= ofToFloat(values[1].c_str());             // the first value is the Letter or Key, the second one is radio from the center
 			float _angle = ofToFloat(values[2].c_str());				// the 3th is the angle on radians from the center (this last to parameters are the ones that let the keabord be redraw in any angle and continue working)
@@ -102,19 +107,23 @@ void ofxKeyboard::draw(){
 		ofTranslate(position.x,position.y);
 		ofRotateZ(ofRadToDeg(angle));
 
+        int padding = 17;
+
 		ofFill();
 		ofSetColor(backgroundColor,255*0.36); // 36% opacity
-        ofRectRounded(-width*0.5, -height*0.5, width, height, 20);
+        ofRect(-width*0.5-5-padding, -height*0.5-5-padding, width+10+padding*2, height+10+padding*2);
+        //ofRectRounded(-width*0.5, -height*0.5, width, height, 20);
 
         ofNoFill();
-        ofSetLineWidth(9);
+        ofSetLineWidth(10);
         ofSetColor(backgroundColor,255*0.36); // 36% opacity
-        ofRectRounded(-width*0.5, -height*0.5, width, height, 20);
+        ofRect(-width*0.5-padding, -height*0.5-padding, width+padding*2, height+padding*2);
+        //ofRectRounded(-width*0.5, -height*0.5, width, height, 20);
 
-		ofNoFill();
-		ofSetLineWidth(2);
-		ofSetColor(foregroundColor);
-    ofRectRounded(-width*0.5, -height*0.5, width, height, 20);
+//		ofNoFill();
+//		ofSetLineWidth(2);
+//		ofSetColor(foregroundColor);
+//      ofRectRounded(-width*0.5, -height*0.5, width, height, 20);
 	ofPopMatrix();
 
 	for(int i = 0; i < nKeys; i++)
@@ -194,15 +203,19 @@ void ofxKeyboard::mouseDragged(ofMouseEventArgs& e) {
 //--------------------------------------------------------------
 void ofxKeyboard::mousePressed(ofMouseEventArgs& e) {
 
+    if (mouseDownTimeMillis  == 0) {
+        ofPoint loc = ofPoint(e.x,e.y);
+        if (isOver(loc))					// IF the cursor is over the keyboard
+            if (checkKeys(loc)){			// ... and is pressing a key
+                //cout << "key being pressed, event sent by checkKeys" << endl;
+            }
+        mouseDownTimeMillis = ofGetElapsedTimeMillis();
+    }
 }
 
 //--------------------------------------------------------------
 void ofxKeyboard::mouseReleased(ofMouseEventArgs& e) {
-    ofPoint loc = ofPoint(e.x,e.y);
-    if (isOver(loc))					// IF the cursor is over the keyboard
-		if (checkKeys(loc)){			// ... and is pressing a key
-		    //cout << "key being pressed, event sent by checkKeys" << endl;
-		}
+    mouseDownTimeMillis = 0;
 }
 
 #ifdef USE_TUIO

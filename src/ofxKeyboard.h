@@ -111,6 +111,9 @@ public:
 	ofEvent<float>      rotation;
 	ofEvent<ofPoint>	moving;
 
+	int mouseDownTimeMillis;
+
+
 	void mouseMoved( ofMouseEventArgs& e );
     void mouseDragged( ofMouseEventArgs& e );
     void mousePressed( ofMouseEventArgs& e );
