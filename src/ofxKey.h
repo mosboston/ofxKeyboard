@@ -39,51 +39,53 @@ public:
 
 	ofxKey();
 	ofxKey(string _s, float _rad, float _ang, float _w, float _h);
-	
+
+	int lastPressedMillis;
+
 	// Initial Setup. Must be set before draw!
 	//
 	void setFont(ofTrueTypeFont * _font){font = _font;};
 	void setKeyboardCenter(ofPoint * _keyboardCenter){keyboardCenter = _keyboardCenter;};
 	void setKeyboardNorth(float * _keyboardNorth){keyboardNorth = _keyboardNorth;};
 	void setColors(const ofColor * _foregroundColor, const ofColor * _backgroundColor ){ foregroundColor = _foregroundColor; backgroundColor = _backgroundColor;};
-	
+
 	//	This information is important for making new keyboard map.
     //
 	void setRadio(ofPoint _position){	radio = _position.distance(*keyboardCenter);};
 	void setAngle(ofPoint _position){ _position -= *keyboardCenter; angle = ( (-1*atan2(_position.x,_position.y)+(PI/2) - *keyboardNorth)); };
 	void moveTo(int _x, int _y){moveTo(ofPoint(_x,_y));};
 	void moveTo(ofPoint _location){ setRadio(_location); setAngle(_location); };
-	
+
     //  Transformations
     //
     void scale(float _scale);
 	void update();
 	void draw();
-	
+
 	// Checkers. someday this will become events
     //
 	bool isOver(int _x, int _y){isOver(ofPoint(_x,_y));};
 	bool isOver(ofPoint _location);
-    
+
     string letter;
     float radio, angle;     // Polar position (radio, angle)
 	float width, height;    // Width and Height of the key
-    
+
     bool pressed;
-    
+
 private:
     ofColor fg,bg;
     ofPoint position;       // Cartesian Position (x,y)
 
     float scaleW;
 	float scaleH;
-    
+
     ofTrueTypeFont  *font;
     const ofColor   *foregroundColor,
                     *backgroundColor;
     ofPoint         *keyboardCenter;
     float           *keyboardNorth;
-    
+
 };
 
 #endif

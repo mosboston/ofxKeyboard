@@ -36,15 +36,15 @@ ofxKey::ofxKey(){
 
 ofxKey::ofxKey(string _letter, float _radio, float _angle, float _width, float _height){
 	letter = _letter;
-	
+
 	radio = _radio;
     angle = _angle;
-	
+
 	width = _width;
     height = _height;
-	
+
 	pressed = false;
-	
+
 	scaleW = 1/width;
 	scaleH = 1/height;
 }
@@ -53,42 +53,53 @@ void ofxKey::scale(float _scale){
     width *= _scale;
     height *= _scale;
     radio *= _scale;
-    
+
     position.x = radio * cos(angle + *keyboardNorth);
 	position.y = radio * sin(angle + *keyboardNorth);
 	position += *keyboardCenter;
 }
 
-void ofxKey::update(){	
+void ofxKey::update(){
 	position.x = radio * cos(angle + *keyboardNorth);
 	position.y = radio * sin(angle + *keyboardNorth);
 	position += *keyboardCenter;
+
+	if (pressed && ofGetElapsedTimeMillis() - lastPressedMillis > 200){
+        fg = *foregroundColor;
+		bg = *backgroundColor;
+        pressed = false;
+	}
 }
 
 void ofxKey::draw(){
 	update();
-	
+
+    fg.setHex(0xFFFFFF);
+    bg.setHex(0x000000);
+
     if (pressed){
-        fg.lerp(*foregroundColor, 0.1);
-        bg.lerp(*backgroundColor, 0.1);
+        fg.lerp(*backgroundColor, 0.5);
+        bg.lerp(*foregroundColor, 0.5);
     }
-    
+
 	ofPushMatrix();
 		ofTranslate(position.x, position.y);
 		ofRotateZ(ofRadToDeg(*keyboardNorth));
-		
-		ofSetColor(bg);
+
+		ofSetColor(bg,255*0.36);
 		ofFill();
         ofRectRounded(-width*0.5, -height*0.5, width, height, 5);
-    
+
 		ofNoFill();
 		ofSetLineWidth(2);
 		ofSetColor(fg);
         ofRectRounded(-width*0.5, -height*0.5, width, height, 5);
-	
+
 		ofFill();
 		ofSetColor(fg);
 		ofScale(width * scaleW,height * scaleH, 1);
+
+		//cout << "font isLoaded: " << font->isLoaded() << endl;
 		font->drawString(letter, -font->stringWidth(letter)*0.5, font->stringHeight(letter)*0.35);//(height/10)*1.3);
     ofPopMatrix();
 }
@@ -99,16 +110,19 @@ bool ofxKey::isOver(ofPoint _location){
 	float r = dirToCenter.length();
 	float x = r * cos(theta + *keyboardNorth);
 	float y = r * sin(theta + *keyboardNorth);
-	
+
 	if ( (x <= width/2) && (x >= -width/2) && (y <= height/2) && (y >= -height/2)){
         fg = *backgroundColor;
 		bg = *foregroundColor;
+		lastPressedMillis = ofGetElapsedTimeMillis();
         pressed = true;
 	} else {
         fg = *foregroundColor;
 		bg = *backgroundColor;
         pressed = false;
 	}
-    
+
+	//cout << "isOver: " << endl;
+
 	return pressed;
 }
